@@ -2,22 +2,22 @@ pipeline {
     agent any
 
     stages {
-        stage('Init') {
+        stage(' Sonar Code Scanning ') {
             steps {
-                echo 'Building package now ..'
-                sh 'mvn -f world-war/pom.xml clean package'
+                sh '''mvn clean verify sonar:sonar \\
+  -Dsonar.projectKey=warscanner \\
+  -Dsonar.host.url=http://104.198.203.114:9000 \\
+  -Dsonar.login=sqp_f0559e99af27d1d545749d313031a373735402e4'''
             }
         }
-        stage('Build') {
+        stage('Package Dependency Scanning ') {
             steps {
-                echo 'fetching its artifacts..'
-                archiveArtifacts artifacts:  '**/*.war'
+                sh 'mvn clean install -Powasp-dependency-check'
             }
         }
-        stage('Test') {
+        stage(' test') {
             steps {
-                echo 'Deploying in testing enviromet ..'
-                build job: 'tomcat_staging_Env'
+               
             }
         }
         stage('Prod') {
