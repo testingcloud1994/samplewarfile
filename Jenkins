@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Init') {
+            steps {
+                echo 'Building package now ..'
+                sh 'mvn -f world-war/pom.xml clean package'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'fetching its artifacts..'
+                archiveArtifacts artifacts:  '**/*.war'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Deploying in testing enviromet ..'
+                build job: 'tomcat_staging_Env'
+            }
+        }
+        stage('Prod') {
+            steps {
+                input('Is it working fine .?')
+                echo 'Deploying in production enviroment ..'
+            }
+        }
+    }
+}
