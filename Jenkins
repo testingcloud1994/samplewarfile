@@ -2,14 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage(' Sonar Code Scanning ') {
+        stage('Sonar Code Scanning') {
             steps {
-                sh '''mvn clean verify sonar:sonar \\
-  -Dsonar.projectKey=warscanner \\
-  -Dsonar.host.url=http://104.198.203.114:9000 \\
-  -Dsonar.login=sqp_f0559e99af27d1d545749d313031a373735402e4'''
+                sh "mvn clean verify sonar:sonar -Dsonar.projectKey=warscanner \ -Dsonar.host.url=http://104.198.203.114:9000 -Dsonar.login=sqp_f0559e99af27d1d545749d313031a373735402e4 "
+                  }
             }
-        }
         stage('Package Dependency Scanning ') {
             steps {
                 sh 'mvn clean install -Powasp-dependency-check'
