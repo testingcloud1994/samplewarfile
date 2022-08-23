@@ -16,10 +16,31 @@ pipeline {
         stage('Creating Build ') {
             steps {
                echo "mvn clean install "
+                  }
             }
-
+        stage('Build Docker Image') {
+            steps {
+                echo "##### build image ##########"
+                sh "docker build -t deployment:v2 ."
+                echo "##### build image completed ##########"
+            }
         }
-        stage('Prod') {
+        stage('Sign Docker Image') {
+            steps {
+                echo "##### Signing Docker Image ##########"
+                echo "docker build -t deployment:v2 ."
+                echo "##### Signing  completed ##########"
+            }
+        }
+        stage('Push to dockerhub') {
+            steps {
+                echo "##### Push Docker image ##########"
+                sh "docker tag deployment:v2 testingcloud1994/deployment:v2 "
+                sh "docker push  testingcloud1994/deployment:v2"
+                echo "##### Docker image pushed to doocker hub  ##########"
+            }
+        }
+       stage('Deploy') {
             steps {
                 input('Is it working fine .?')
                 echo 'Deploying in production enviroment ..'
