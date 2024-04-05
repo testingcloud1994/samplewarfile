@@ -1,27 +1,22 @@
 pipeline {
     agent any
-
-    stages {
-        stage(' Sonar Code Scanning ') {
-            steps {
-                sh '''echo "stage 1"'''
-            }
-        }
-        stage('Package Dependency Scanning ') {
-            steps {
-                sh 'echo stage2'
-            }
-        }
-        stage(' test') {
-            steps {
-               
-            }
-        }
-        stage('Prod') {
-            steps {
-                input('Is it working fine .?')
-                echo 'Deploying in production enviroment ..'
-            }
-        }
+    environment{
+        DOCKERCRED=credentials('docker_registry') 
+        Docker_Space='myphpproject'
     }
+    stages{
+        stage("Git Checkout"){
+            steps{
+                sh "rm -r *;git clone https://github.com/testingcloud1994/samplewarfile.git;cd samplewarfile;ls"
+                }}
+        stage("login docker"){
+            steps{
+            sh 'echo $DOCKERCRED_PSW | docker login -u $DOCKERCRED_USR --password-stdin'
+            echo "Login Succeded"
+            }}
+        stage("Docker Push Image"){
+            steps{
+            //    sh 'docker tag nginx $DOCKERCRED_USR/$Docker_Space;docker push $DOCKERCRED_USR/$Docker_Space; docker logout;rm -r *;'
+            }}
+        }    
 }
