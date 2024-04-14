@@ -1,7 +1,7 @@
 package hello;
 
 public class Greeter {
-    public String sayHello() {
-        return "Deployment successful";
-    }
+  public String sayHello() {
+    return "Hello world!";
+  }
 }
